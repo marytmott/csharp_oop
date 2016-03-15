@@ -10,19 +10,34 @@ namespace heron_sqrt
     {
         static void Main(string[] args)
         {
-            double sr = Heron.SquareRoot(10);
+            int numOfErrs = 0;
 
+            try
+            {
+                Validate.val();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("EXCEPTION: {0}", ex);
+                numOfErrs++;
+            }
+            finally
+            {
+                Console.WriteLine("Total number of errors: {0}", numOfErrs);
+            }
+            Console.ReadLine();
         }
     }
 
     class Heron
     {
+        public Heron() { }
 
-        public static double SquareRoot(double num)
+        public double SqRt(double num)
         {
             double guess = num / 2;
             double margin = .0001;
-            //Console.WriteLine("initial guess {0}", guess);
+            /// Console.WriteLine("initial guess {0}", guess);
 
             /// check if arg is type int
             if (num.GetType() != typeof(double))
@@ -44,8 +59,6 @@ namespace heron_sqrt
                 /// if guess is between the margins we want
                 if (guess * guess > num - margin && guess * guess < num + margin)
                 {
-                    Console.WriteLine("guessed right! {0}", guess);
-                    //Console.ReadLine();
                     return guess;
                 }
                 /// or try again!
@@ -53,5 +66,42 @@ namespace heron_sqrt
 
             }
         }
+    }
+
+    class Sqrt
+    {
+        public Sqrt() { }
+        public double SqRt(double num)
+        {
+            return Math.Sqrt(num);
+        }
+    }
+
+    class Validate
+    {
+        public static void val()
+        {
+            Heron heron = new Heron();
+            Sqrt sqrt = new Sqrt();
+            double errMargin = .0001;
+
+            for (int i = 0; i < 10000; i++)
+            {
+                /// generate new random number
+                Random rdm = new Random();
+                double rdmNum = rdm.Next(0, 100000);
+
+                /// get vals from both classes
+                double hsqrt = heron.SqRt(rdmNum);
+                double ssqrt = sqrt.SqRt(rdmNum);
+
+                if (hsqrt - ssqrt > errMargin || ssqrt - hsqrt > errMargin )
+                {
+                    throw new ApplicationException("Exceeded allowable calculation error margin.");
+                }
+
+            }
+        }
+
     }
 }

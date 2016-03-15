@@ -10,18 +10,27 @@ namespace caesar_cipher
     {
         static void Main(string[] args)
         {
-            string alphabet = "abcdefghijklmnopqrstuvwxyz";
+            string alphabet = " abcdefghijklmnopqrstuvwxyz";
             CaesarCipher testCipher = new CaesarCipher(alphabet);
+
+            /// test offset
             string newAbet = testCipher.setOffset(5);
+            Console.WriteLine(alphabet);
             Console.WriteLine(newAbet);
+
+            /// test cipher
+            string message = "look out behind you lol not really";
+            string ciphered = testCipher.cipher(message);
+            Console.WriteLine(ciphered);
+
             Console.ReadLine();
         }
     }
 
     class CaesarCipher
     {
-        private string alphabet;
-        private string offsetAlphabet;
+        private string _alphabet;
+        private string _offsetAlphabet;
 
         /// sets the offset alphabet
         public string setOffset(int offsetAmount)
@@ -29,30 +38,36 @@ namespace caesar_cipher
             string newBeginning;
             string newEnding;
 
-            newBeginning = alphabet.Substring(offsetAmount);
-            newEnding = alphabet.Substring(0, offsetAmount);
-            this.offsetAlphabet = newBeginning + newEnding;
+            newBeginning = _alphabet.Substring(offsetAmount);
+            newEnding = _alphabet.Substring(0, offsetAmount);
+            this._offsetAlphabet = newBeginning + newEnding;
 
-            return this.offsetAlphabet;
+            return this._offsetAlphabet;
         }
 
         /// cypher a message
-        //public string cipher(string message)
-        //{
-        //    //string ciphered;
+        public string cipher(string message)
+        {
+            string ciphered = "";
 
-
-        //}
+            for (int i = 0; i < message.Length; i++)
+            {
+                char currLetter = message[i];
+                int idx = this._alphabet.IndexOf(currLetter);
+                ciphered += this._offsetAlphabet[idx];
+            }
+            return ciphered;
+        }
 
         /// decipher a message
         //public string decipher(string message)
         //{
 
         //}
-        
+
         public CaesarCipher(string alphabet)
         {
-            this.alphabet = alphabet;
+            this._alphabet = alphabet;
         }
     }
 }

@@ -31,8 +31,6 @@ namespace heron_sqrt
 
     class Heron
     {
-        public Heron() { }
-
         public double SqRt(double num)
         {
             double guess = num / 2;
@@ -66,15 +64,18 @@ namespace heron_sqrt
 
             }
         }
+
+        public Heron() { }
     }
 
     class Sqrt
     {
-        public Sqrt() { }
         public double SqRt(double num)
         {
             return Math.Sqrt(num);
         }
+
+        public Sqrt() { }
     }
 
     class Validate

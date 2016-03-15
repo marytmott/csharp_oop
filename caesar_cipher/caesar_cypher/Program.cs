@@ -23,6 +23,10 @@ namespace caesar_cipher
             string ciphered = testCipher.cipher(message);
             Console.WriteLine(ciphered);
 
+            /// test decipher
+            string deciphered = testCipher.decipher(ciphered);
+            Console.WriteLine(deciphered);
+
             Console.ReadLine();
         }
     }
@@ -60,10 +64,18 @@ namespace caesar_cipher
         }
 
         /// decipher a message
-        //public string decipher(string message)
-        //{
+        public string decipher(string message)
+        {
+            string deciphered = "";
 
-        //}
+            for (int i = 0; i < message.Length; i++)
+            {
+                char currLetter = message[i];
+                int idx = this._offsetAlphabet.IndexOf(currLetter);
+                deciphered += this._alphabet[idx];
+            }
+            return deciphered;
+        }
 
         public CaesarCipher(string alphabet)
         {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace caesar_cipher
+namespace CaesarCipher
 {
     class Program
     {
@@ -31,16 +31,24 @@ namespace caesar_cipher
         }
     }
 
-    class CaesarCipher
+    public class CaesarCipher
     {
         private string _alphabet;
         private string _offsetAlphabet;
 
         /// sets the offset alphabet
+        /// edge case for offset of 0?
         public string setOffset(int offsetAmount)
         {
             string newBeginning;
             string newEnding;
+            int alphabetLength = this._alphabet.Length;
+
+            if (offsetAmount == 0 || offsetAmount > alphabetLength)
+            {
+                throw new ArgumentException("Invalid offset amount entered.");
+            }
+
 
             newBeginning = _alphabet.Substring(offsetAmount);
             newEnding = _alphabet.Substring(0, offsetAmount);

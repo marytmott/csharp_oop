@@ -13,17 +13,17 @@ namespace CaesarCipher
             string alphabet = " abcdefghijklmnopqrstuvwxyz";
             CaesarCipher testCipher = new CaesarCipher(alphabet);
 
-            /// test offset
-            string newAbet = testCipher.setOffset(5);
+            // test offset
+            string newAbet = testCipher.setOffset(15);
             Console.WriteLine(alphabet);
             Console.WriteLine(newAbet);
 
-            /// test cipher
-            string message = "look out behind you lol not really";
+            // test cipher
+            string message = "the dove arrives at noon";
             string ciphered = testCipher.cipher(message);
             Console.WriteLine(ciphered);
 
-            /// test decipher
+            // test decipher
             string deciphered = testCipher.decipher(ciphered);
             Console.WriteLine(deciphered);
 
@@ -36,19 +36,18 @@ namespace CaesarCipher
         private string _alphabet;
         private string _offsetAlphabet;
 
-        /// sets the offset alphabet
-        /// edge case for offset of 0?
+        // sets the offset alphabet
+        // edge case for offset of 0?
         public string setOffset(int offsetAmount)
         {
             string newBeginning;
             string newEnding;
             int alphabetLength = this._alphabet.Length;
 
-            if (offsetAmount == 0 || offsetAmount > alphabetLength)
+            if (offsetAmount == 0 || offsetAmount >= alphabetLength)
             {
                 throw new ArgumentException("Invalid offset amount entered.");
             }
-
 
             newBeginning = _alphabet.Substring(offsetAmount);
             newEnding = _alphabet.Substring(0, offsetAmount);
@@ -57,7 +56,7 @@ namespace CaesarCipher
             return this._offsetAlphabet;
         }
 
-        /// cypher a message
+        // cypher a message
         public string cipher(string message)
         {
             string ciphered = "";
@@ -66,12 +65,17 @@ namespace CaesarCipher
             {
                 char currLetter = message[i];
                 int idx = this._alphabet.IndexOf(currLetter);
+                // dry this up w/ decipher
+                if (idx == -1)
+                {
+                    throw new ArgumentException("Invalid character in message.");
+                }
                 ciphered += this._offsetAlphabet[idx];
             }
             return ciphered;
         }
 
-        /// decipher a message
+        // decipher a message
         public string decipher(string message)
         {
             string deciphered = "";
@@ -80,6 +84,11 @@ namespace CaesarCipher
             {
                 char currLetter = message[i];
                 int idx = this._offsetAlphabet.IndexOf(currLetter);
+                // dry this up with above
+                if (idx == -1)
+                {
+                    throw new ArgumentException("Invalid character in message.");
+                }
                 deciphered += this._alphabet[idx];
             }
             return deciphered;

@@ -10,6 +10,9 @@ namespace LRUCache
     {
         static void Main(string[] args)
         {
+            LRUCache<int, string> myLruCache = new LRUCache<int, string>(10);
+            
+            //myLruCache
         }
     }
 
@@ -42,18 +45,12 @@ namespace LRUCache
         public void Add(TKey key, TValue val)
         {
 
+            // type set the key -- upper/lower??
+
             // check for length
             // check for existence
             // make new
 
-
-
-
-        }
-
-        // will look for item in the cache
-        private bool TryGetValue(TKey key, out TValue val)
-        {
             // find
 
             // if not found, add
@@ -62,6 +59,22 @@ namespace LRUCache
             // if found
             // move
 
+
+
+        }
+
+        // will look for item in the cache
+        private bool TryGetValue(TKey key, out TValue val)
+        {
+            // if node is found
+            if (this._cachedItems.TryGetValue(key, out val))
+            {
+                // move node
+                _sortedUseList.Remove(val);
+                _sortedUseList.AddFirst(val);
+                return true;
+            }
+            return false;
         }
 
         // clears the cache

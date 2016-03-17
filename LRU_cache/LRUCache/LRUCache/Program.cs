@@ -15,6 +15,10 @@ namespace LRUCache
 
     public class LRUCache
     {
+        // fields
+        // dictionary
+        // length
+
         // dictionary
         // value found by key reference
         // elements are added to top of list

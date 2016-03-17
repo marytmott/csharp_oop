@@ -20,16 +20,14 @@ namespace LRUCache
     // make new node class which references key in dictionary
     public class LRUCache<TKey, TValue> // do we need to add constraints?
     {
-        private Dictionary<TKey, LinkedList<TValue>> _cachedItems;
-        private LinkedList<TValue> _sortedUseList;  // TValue represents the type of nodes
+        private Dictionary<TKey, CacheDLinkedList> _cachedItems;
+        private CacheDLinkedList _sortedUseList;
 
         // properties
         public int Count { get; private set; }  // number of items currently in the cache
         public int Length { get; set; }
-        //public int Length2
-        //{ get { return _length; } private set { _length = value; } }
 
-        // constructor - instantiate with length
+        // constructor - instantiate with length ----
         public LRUCache(int length)
         {
             // check length
@@ -38,8 +36,8 @@ namespace LRUCache
                 throw new ArgumentException("Length must be greater than 1.");
             }
 
-            this._cachedItems = new Dictionary<TKey, LinkedList<TValue>>();
-            this._sortedUseList = new LinkedList<TValue>();
+            this._cachedItems = new Dictionary<TKey, CacheDLinkedList>>();
+            this._sortedUseList = new CacheDLinkedList();
             this.Length = length;
             this.Count = 0;
         }
@@ -50,6 +48,7 @@ namespace LRUCache
             LinkedListNode<TValue> node;
             LinkedListNode<TValue> newNode;
             LinkedListNode<TValue> lastNode;
+            bool keyExists = this.TryGetValue(key, out node);
 
             // if key/node is not found
             if (!this.TryGetValue(key, out node))
@@ -82,21 +81,22 @@ namespace LRUCache
             }
         }
 
-        // will look for item in the cache
+        // will look for item in the cache ---
         private bool TryGetValue(TKey key, out TValue val)
         {
             // if node is found
             if (this._cachedItems.TryGetValue(key, out val))
             {
-                // move node
-                _sortedUseList.Remove(val);     // deconstruct? // need to set this to var?
-                _sortedUseList.AddFirst(val);
+                // move node -- move by key since it will always be unique
+                _sortedUseList.MoveToFirst(key);
+                //_sortedUseList.Remove(key);     // deconstruct? // need to set this to var?
+                //_sortedUseList.AddFirst(key);
                 return true;
             }
             return false;
         }
 
-        // clears the cache
+        // clears the cache ---
         private void Clear()
         {
             _cachedItems.Clear();
@@ -105,31 +105,98 @@ namespace LRUCache
         }
 
 
-        //private class CacheDLinkedList
-        //{
-        //    public CacheNode<T> First { get; private set; }
-        //    public CacheNode<T> Last { get; private set; }
-            
-        //    private CacheDLinkedList()
-            
-        //    First
-        //    Last
-            
-        //    Length
 
-        //}
+        // want to do my own implementation so I can store the dictionary's unique key as a value for faster look up
+        // private class for use by LRU cache only
+        private class CacheDLinkedList
+        {
+            public CacheNode First { get; private set; }
+            public CacheNode Last { get; private set; }
+            public int Length { get; private set; }
 
-        // want to do my own implementation so I can store the dictionary's unique key as a value
-        // isn't this too redundant for the key tho?
-        
-        //private class CacheNode<T>
-        //{
+            // constructor
+            public CacheDLinkedList()
+            {
+                this.First = null;
+                this.Last = null;
+                this.Length = 0;
+            }
 
-        //    Key
-        //    value;
-        //    next
-        //        prev;
+            public CacheNode Add(TKey key, TValue value)
+            {
+                CacheNode newNode = new CacheNode(key, value);
+                this.Length++;
+                return this.AddFirst(newNode);
+            }
 
-        //}
+            public CacheNode AddFirst(CacheNode node)
+            {
+                // if no first node
+                if (this.First == null)
+                {
+                    this.First = node;
+                    this.Last = node;
+                }
+                else
+                {
+                    node.Next = this.First;
+                    this.First.Prev = node;
+                    this.First = node;
+                }
+                return node;
+            }
+
+            // move node to first
+            public void MoveToFirst(TKey key)
+            {
+                CacheNode currNode = this.First;
+
+                // remove node and set next/prev of surrounding
+                while(currNode.Next != null)
+                {
+                    // might have probs w/ var type?
+                    if (currNode.Key.ToString() == key.ToString())
+                    {
+                        currNode.Prev.Next = currNode.Next;
+                        currNode.Next.Prev = currNode.Prev;
+                        this.First = currNode;
+
+                        return;
+                    }
+                    currNode = currNode.Next;
+                }
+            }
+
+            public void Clear()
+            {
+                CacheNode currNode = this.First.Next;
+
+                // set all objects to null -- blow all objects away by setting to null
+                for (int i = 0; i < this.Length - 1; i++)
+                {
+                    currNode.Prev = null;
+                    currNode = currNode.Next;
+                }
+                currNode = null;
+            }
+
+            // nodes for the list
+            private class CacheNode
+            {
+                public CacheNode Next { get; set; }
+                public CacheNode Prev { get; set; }
+                public TKey Key { get; private set; }
+                public TValue Value { get; private set; }
+
+                // constructor for node
+                public CacheNode(TKey key, TValue value)
+                {
+                    this.Key = key;
+                    this.Value = value;
+                }
+            }
+
+        }
+
     }
 }

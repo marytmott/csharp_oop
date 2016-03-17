@@ -16,9 +16,11 @@ namespace LRUCache
         }
     }
 
+
+    // make new node class which references key in dictionary
     public class LRUCache<TKey, TValue> // do we need to add constraints?
     {
-        private Dictionary<TKey, TValue> _cachedItems;
+        private Dictionary<TKey, LinkedList<TValue>> _cachedItems;
         private LinkedList<TValue> _sortedUseList;  // TValue represents the type of nodes
 
         // properties
@@ -34,33 +36,50 @@ namespace LRUCache
             if (length < 2)
             {
                 throw new ArgumentException("Length must be greater than 1.");
-            } else
-            {
-                this.Length = length;
             }
+
+            this._cachedItems = new Dictionary<TKey, LinkedList<TValue>>();
+            this._sortedUseList = new LinkedList<TValue>();
+            this.Length = length;
             this.Count = 0;
         }
         
         // add to cache
         public void Add(TKey key, TValue val)
         {
+            LinkedListNode<TValue> node;
+            LinkedListNode<TValue> newNode;
+            LinkedListNode<TValue> lastNode;
 
-            // type set the key -- upper/lower??
+            // if key/node is not found
+            if (!this.TryGetValue(key, out node))
+            {
 
-            // check for length
-            // check for existence
-            // make new
+                // if max length, remove last node
+                if (this.Count == this.Length)
+                {
+                    // remove node from dictionary too
+                    lastNode = this._sortedUseList.Last;
+                    foreach(KeyValuePair<TKey, TValue> entry in this._cachedItems)
+                    {
+                        if (Object.ReferenceEquals(entry.Value, lastNode))
+                        {
+                            this._cachedItems.Remove(entry.Key);
+                            break;
+                        }
+                    }
+                    // remove last node from list
+                    this._sortedUseList.RemoveLast();
+                }
 
-            // find
-
-            // if not found, add
-            // if length is max
-
-            // if found
-            // move
-
-
-
+                // make new node
+                newNode = new LinkedListNode<TValue>(val);
+                // add to list
+                _sortedUseList.AddAfter(newNode);
+                // add to dictionary
+                _cachedItems.Add(key, newNode);
+                this.Count++;
+            }
         }
 
         // will look for item in the cache
@@ -70,7 +89,7 @@ namespace LRUCache
             if (this._cachedItems.TryGetValue(key, out val))
             {
                 // move node
-                _sortedUseList.Remove(val);
+                _sortedUseList.Remove(val);     // deconstruct? // need to set this to var?
                 _sortedUseList.AddFirst(val);
                 return true;
             }
@@ -86,38 +105,31 @@ namespace LRUCache
         }
 
 
+        //private class CacheDLinkedList
+        //{
+        //    public CacheNode<T> First { get; private set; }
+        //    public CacheNode<T> Last { get; private set; }
+            
+        //    private CacheDLinkedList()
+            
+        //    First
+        //    Last
+            
+        //    Length
 
+        //}
 
-        /*
-        Linked list:
-            - value
-            - move if found
-            - replace pointers when moved
-            - remove last --(also remove dictionary key reference)
-            - add head
+        // want to do my own implementation so I can store the dictionary's unique key as a value
+        // isn't this too redundant for the key tho?
+        
+        //private class CacheNode<T>
+        //{
 
-        Dictionary:
-            - key (to search)
-            - get node
+        //    Key
+        //    value;
+        //    next
+        //        prev;
 
-            -- if not found
-                -- if too long, remove last
-                -- or add
-
-        */
-
-        // fields
-        // dictionary
-        // length
-
-        // dictionary
-        // value found by key reference
-        // elements are added to top of list
-        // needs fixed size
-
-        // constructor indicating max cap
-        // property indicating curr # of els
-        // three methods
-
+        //}
     }
 }

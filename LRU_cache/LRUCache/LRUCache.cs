@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LRUCache
+namespace Cache
 {
     class Program
     {
@@ -94,7 +94,7 @@ namespace LRUCache
         }
 
         // will look for item in the cache
-        private bool TryGetValue(TKey key, out TValue val)
+        public bool TryGetValue(TKey key, out TValue val)
         {
             LinkedListNode<TKey> node;
 

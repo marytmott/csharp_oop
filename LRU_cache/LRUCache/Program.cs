@@ -38,8 +38,8 @@ namespace LRUCache
                 throw new ArgumentException("Length must be greater than 1.");
             }
 
-            this._cachedItems = new Dictionary<TKey, LinkedList<TValue>>();
-            this._sortedUseList = new LinkedList<TValue>();
+            this._cachedItems = new Dictionary<TKey, TValue>();
+            this._sortedUseList = new LinkedList<TKey>();
             this.Length = length;
             this.Count = 0;
         }
@@ -47,9 +47,9 @@ namespace LRUCache
         // add to cache
         public void Add(TKey key, TValue val)
         {
-            LinkedListNode<TValue> node;
-            LinkedListNode<TValue> newNode;
-            LinkedListNode<TValue> lastNode;
+            LinkedListNode<TKey> node;
+            LinkedListNode<TKey> newNode;
+            LinkedListNode<TKey> lastNode;
 
             // if key/node is not found
             if (!this.TryGetValue(key, out node))
@@ -82,55 +82,30 @@ namespace LRUCache
             }
         }
 
-        // will look for item in the cache
+        // will look for item in the cache ---
         private bool TryGetValue(TKey key, out TValue val)
         {
+            LinkedListNode<TKey> node;
+
             // if node is found
             if (this._cachedItems.TryGetValue(key, out val))
             {
+                node = _sortedUseList.Find(key);
                 // move node
-                _sortedUseList.Remove(val);     // deconstruct? // need to set this to var?
-                _sortedUseList.AddFirst(val);
+                _sortedUseList.Remove(node);     // deconstruct? // need to set this to var?
+                _sortedUseList.AddFirst(node);
                 return true;
             }
             return false;
         }
 
-        // clears the cache
+        // clears the cache ---
         private void Clear()
         {
             _cachedItems.Clear();
             _sortedUseList.Clear();
             this.Count = 0;
         }
-
-
-        //private class CacheDLinkedList
-        //{
-        //    public CacheNode<T> First { get; private set; }
-        //    public CacheNode<T> Last { get; private set; }
-
-        //    private CacheDLinkedList()
-
-        //    First
-        //    Last
-
-        //    Length
-
-        //}
-
-        // want to do my own implementation so I can store the dictionary's unique key as a value
-        // isn't this too redundant for the key tho?
-
-        //private class CacheNode<T>
-        //{
-
-        //    Key
-        //    value;
-        //    next
-        //        prev;
-
-        //}
     }
 }
 

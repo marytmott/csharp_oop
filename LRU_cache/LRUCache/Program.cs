@@ -10,9 +10,6 @@ namespace LRUCache
     {
         static void Main(string[] args)
         {
-            LRUCache<int, string> myLruCache = new LRUCache<int, string>(10);
-
-            //myLruCache
         }
     }
 
@@ -21,13 +18,30 @@ namespace LRUCache
     public class LRUCache<TKey, TValue> // do we need to add constraints?
     {
         private Dictionary<TKey, TValue> _cachedItems;
-        private LinkedList<TKey> _sortedUseList;  // TValue represents the type of nodes
+        private LinkedList<TKey> _sortedUseList;
+        public int count;   // number of items currently in the cache
+        public int length;
 
         // properties
-        public int Count { get; private set; }  // number of items currently in the cache
-        public int Length { get; set; }
-        //public int Length2
-        //{ get { return _length; } private set { _length = value; } }
+        public int Count
+        {
+            get
+            {
+                return this.count;
+            }
+        }
+
+        public int Length
+        {
+            get
+            {
+                return this.length;
+            }
+            set
+            {
+                this.length = value;
+            }
+        }
 
         // constructor - instantiate with length
         public LRUCache(int length)
@@ -40,49 +54,46 @@ namespace LRUCache
 
             this._cachedItems = new Dictionary<TKey, TValue>();
             this._sortedUseList = new LinkedList<TKey>();
-            this.Length = length;
-            this.Count = 0;
+            this.length = length;
+            this.count = 0;
         }
 
         // add to cache
         public void Add(TKey key, TValue val)
         {
-            LinkedListNode<TKey> node;
             LinkedListNode<TKey> newNode;
             LinkedListNode<TKey> lastNode;
+            bool keyFound = this.TryGetValue(key, out val);
+
+            if (keyFound)
+            {
+                throw new ArgumentException("Key already exists in cache.");
+            }
 
             // if key/node is not found
-            if (!this.TryGetValue(key, out node))
+            // if max length, remove last node
+            if (this.count == this.length)
             {
-
-                // if max length, remove last node
-                if (this.Count == this.Length)
-                {
-                    // remove node from dictionary too
-                    lastNode = this._sortedUseList.Last;
-                    foreach (KeyValuePair<TKey, TValue> entry in this._cachedItems)
-                    {
-                        if (Object.ReferenceEquals(entry.Value, lastNode))
-                        {
-                            this._cachedItems.Remove(entry.Key);
-                            break;
-                        }
-                    }
-                    // remove last node from list
-                    this._sortedUseList.RemoveLast();
-                }
-
-                // make new node
-                newNode = new LinkedListNode<TValue>(val);
-                // add to list
-                _sortedUseList.AddAfter(newNode);
-                // add to dictionary
-                _cachedItems.Add(key, newNode);
-                this.Count++;
+                lastNode = this._sortedUseList.Last;
+                // remove last node from list
+                this._sortedUseList.RemoveLast();
+                // remove node from dictionary too
+                this._cachedItems.Remove(lastNode.Value);
             }
+            else
+            {
+                // will need to make new node (below) and increase count of cache
+                this.count++;
+            }
+            // make new node
+            newNode = new LinkedListNode<TKey>(key);
+            // add to list
+            _sortedUseList.AddFirst(newNode);
+            // add to dictionary
+            _cachedItems.Add(key, val);
         }
 
-        // will look for item in the cache ---
+        // will look for item in the cache
         private bool TryGetValue(TKey key, out TValue val)
         {
             LinkedListNode<TKey> node;
@@ -99,12 +110,12 @@ namespace LRUCache
             return false;
         }
 
-        // clears the cache ---
+        // clears the cache
         private void Clear()
         {
             _cachedItems.Clear();
             _sortedUseList.Clear();
-            this.Count = 0;
+            this.count = 0;
         }
     }
 }

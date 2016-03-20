@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LRUCacheTests
 {
-    // testing Clean()
+    // testing Clear()
     [TestClass]
     public class LRUCacheTests4
     {

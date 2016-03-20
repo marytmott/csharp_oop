@@ -51,6 +51,6 @@ namespace LRUCacheTests
 
 
 
-        // test clean()
+        // test clear()
     }
 }

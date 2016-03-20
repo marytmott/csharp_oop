@@ -10,6 +10,13 @@ namespace Cache
     {
         static void Main(string[] args)
         {
+            //LRUCache<int, string> testCache = new LRUCache<int, string>(100);
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    testCache.Add(i, i.ToString());
+            //}
+            //string temp;
+            //testCache.TryGetValue(2, out temp);
         }
     }
 
@@ -63,7 +70,7 @@ namespace Cache
         {
             LinkedListNode<TKey> newNode;
             LinkedListNode<TKey> lastNode;
-            bool keyFound = this.TryGetValue(key, out val);
+            bool keyFound = _cachedItems.ContainsKey(key);
 
             if (keyFound)
             {
@@ -97,14 +104,20 @@ namespace Cache
         public bool TryGetValue(TKey key, out TValue val)
         {
             LinkedListNode<TKey> node;
+            //TKey nodeVal;
 
             // if node is found
             if (this._cachedItems.TryGetValue(key, out val))
             {
                 node = _sortedUseList.Find(key);
                 // move node
-                _sortedUseList.Remove(node);     // deconstruct? // need to set this to var?
+                _sortedUseList.Remove(node);     // deconstruct? or does GC take care of this?
                 _sortedUseList.AddFirst(node);
+
+                //  FOR TESTING PRIVATE:
+                //nodeVal = this._sortedUseList.First.Value;
+                //Console.WriteLine("nodeVal: {0}", nodeVal);
+                //Console.ReadLine();
                 return true;
             }
             return false;

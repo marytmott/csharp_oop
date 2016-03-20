@@ -52,10 +52,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="TestMethods.cs" />
     <Compile Include="LRUCacheTests3.cs" />
     <Compile Include="LRUCacheTests1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LRUCacheTests2.cs" />
+    <Compile Include="LRUCacheTests4.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LRUCache\LRUCache.csproj">

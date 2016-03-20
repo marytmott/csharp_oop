@@ -23,10 +23,24 @@ namespace LRUCacheTests
         }
 
         [TestMethod]
-        public void ShouldReturnFalseIfKeyNotFound()
+        public void ShouldReturnTrueIfKeyIsFound()
         {
 
         }
+
+        [TestMethod]
+        public void ShouldReturnFalseIfKeynotFound()
+        {
+
+        }
+
+        [TestMethod]
+        public void ShouldReturnCorrectValue()
+        {
+
+        }
+
+
 
         // TESTS!::::
 

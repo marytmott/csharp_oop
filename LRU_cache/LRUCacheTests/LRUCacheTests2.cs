@@ -4,7 +4,7 @@ using Cache;
 
 namespace LRUCacheTests
 {
-    // testing add to cache
+    // testing Add() to cache
     [TestClass]
     public class LRUCacheTests2
     {
@@ -22,14 +22,7 @@ namespace LRUCacheTests
             testCache = null;
         }
 
-        // to use for adding items to test cache
-        public void AddToTestCache(int startNum, int endNum)
-        {
-            for (int i = startNum; i < endNum; i++)
-            {
-                testCache.Add(i, i.ToString());
-            }
-        }
+       
 
         [TestMethod]
         public void ShouldAddNewNodeAndDictionaryEntryIfKeyIsNotFound()
@@ -45,15 +38,15 @@ namespace LRUCacheTests
         [TestMethod]
         public void TestThatItIncreasesCountCorrectly()
         {
-            AddToTestCache(0, 5);
+            TestMethods.AddToTestCache(testCache, 0, 5);
 
             Assert.AreEqual(5, testCache.Count);
 
-            AddToTestCache(5, 50);
+            TestMethods.AddToTestCache(testCache, 5, 50);
 
             Assert.AreEqual(50, testCache.Count);
 
-            AddToTestCache(50, 100);
+            TestMethods.AddToTestCache(testCache, 50, 100);
 
             Assert.AreEqual(100, testCache.Count);
         }
@@ -62,14 +55,14 @@ namespace LRUCacheTests
         [ExpectedException(typeof(ArgumentException), "Key already exists in cache.")]
         public void ShouldThrowExceptionIfKeyExists()
         {
-            AddToTestCache(0, 25);
+            TestMethods.AddToTestCache(testCache, 0, 25);
             testCache.Add(17, "17");
         }
 
         [TestMethod]
         public void ShouldRemoveLastItemIfKeyExists()
         {
-            AddToTestCache(0, 100);
+            TestMethods.AddToTestCache(testCache, 0, 100);
             testCache.Add(101, "101");
             string lastVal;
             bool notFound = testCache.TryGetValue(0, out lastVal);
@@ -93,7 +86,7 @@ namespace LRUCacheTests
         [TestMethod]
         public void ShouldIncreaseCountIfCacheIsNotMaxed()
         {
-            AddToTestCache(0, 50);
+            TestMethods.AddToTestCache(testCache, 0, 50);
             int count1 = testCache.Count;
 
             testCache.Add(60, "60");
@@ -106,7 +99,7 @@ namespace LRUCacheTests
         [TestMethod]
         public void ShouldNotIncreaseCountIfCacheIsMaxed()
         {
-            AddToTestCache(0, 1000);
+            TestMethods.AddToTestCache(testCache, 0, 1000);
             int count = testCache.Count;
 
             Assert.AreEqual(100, count);

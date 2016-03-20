@@ -29,9 +29,6 @@ namespace LRUCacheTests
         }
 
         // TESTS!::::
-        // should return count
-        // should increase count when adding to db (if not full)
-        // count should be same if count is at max length
 
         // should return tru
         // should return false

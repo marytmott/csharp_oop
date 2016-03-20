@@ -56,8 +56,6 @@ namespace LRUCacheTests
             AddToTestCache(50, 100);
 
             Assert.AreEqual(100, testCache.Count);
-
-            // test getting random number between 1 and 100?
         }
 
         [TestMethod]

@@ -124,7 +124,7 @@ namespace Cache
         }
 
         // clears the cache
-        private void Clear()
+        public void Clear()
         {
             _cachedItems.Clear();
             _sortedUseList.Clear();

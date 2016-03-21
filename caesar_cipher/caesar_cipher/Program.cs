@@ -77,6 +77,20 @@ namespace CaesarCipher
 
     public class ArrayBasedAlphabet : AAlphabet
     {
+        private char[] _alphabet;
+        private char[] _charMap;
+
+        public ArrayBasedAlphabet(char[] alphabet) : base(alphabet)
+        {
+            int charMapLength = alphabet.Length;
+
+            this._alphabet = alphabet;
+            _charMap = new char[charMapLength];
+        }
+
+        public override void Transpose(int offset)
+        {
+        }
 
     }
 

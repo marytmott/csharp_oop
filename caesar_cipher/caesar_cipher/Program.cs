@@ -31,10 +31,60 @@ namespace CaesarCipher
         }
     }
 
+    public abstract class AAlphabet
+    {
+        public AAlphabet(char[] alphabet) { }
+
+        public abstract void Transpose(int offset);
+
+        public abstract char GetTransposedChar(char c);
+
+    }
+
+    public class DictionaryBasedAlphabet : AAlphabet
+    {
+        private char[] _alphabet;
+        private Dictionary<char, char> _charMap;
+
+        public DictionaryBasedAlphabet(char[] alphabet) : base(alphabet)
+        {
+            this._alphabet = alphabet;
+            _charMap = new Dictionary<char, char>();
+        }
+
+        public override void Transpose(int offset)
+        {
+            int abetLength = _alphabet.Length;
+            // transpose for length of alphabet
+            for (int i = 0; i < abetLength; i++)
+            {
+                int currOffset = i + offset;
+
+                if (currOffset >= abetLength)
+                {
+                    currOffset = currOffset - abetLength;
+                }
+                _charMap[_alphabet[i]] = _alphabet[currOffset];
+            }
+        }
+
+        public override char GetTransposedChar(char c)
+        {
+            return _charMap[c];
+        }
+           
+    }
+
+    public class ArrayBasedAlphabet : AAlphabet
+    {
+
+    }
+
     public class CaesarCipher
     {
-        private string _alphabet;
-        private string _offsetAlphabet;
+        // store in multi array
+        private char[,] _alphabet;
+        private char[,] _offsetAlphabet;
 
         // sets the offset alphabet
         // edge case for offset of 0?

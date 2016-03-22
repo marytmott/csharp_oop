@@ -79,8 +79,7 @@ namespace CaesarCipher
     public class ArrayBasedAlphabet : AAlphabet
     {
         private char[] _alphabet;
-        private char[] _charMap = new char[128];   // 128 = number of ascii codes available to encode
-
+        private char[] _charMap = new char[256];   // 256 = number of ascii codes available to encode
         private int _offset;
 
         public ArrayBasedAlphabet(char[] alphabet) : base(alphabet)
@@ -94,10 +93,30 @@ namespace CaesarCipher
         public override void Transpose(int offset)
         {
             this._offset = offset;
+            int abetLength = _alphabet.Length;
+            
+            // dry this up, used in dict as well
+            for (int i = 0; i < abetLength; i++)
+            {
+                int currOffset = i + offset;
+
+                if (currOffset >= abetLength)
+                {
+                    currOffset = currOffset - abetLength;
+                }
+                _charMap[_alphabet[i]] = _alphabet[currOffset];
+            }
+
+
         }
 
         public override char GetTransposedChar(char c)
         { 
+            // convert to byte
+            // add to offset
+
+
+
             // get ascii code (using c# library?)
             // get the numberic val and transpose it?
             // store offset and query ascii + offset every time?

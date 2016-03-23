@@ -46,7 +46,7 @@ namespace CaesarCipherTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException), "Offset cannot be greater than length of Alphabet")]
+        [ExpectedException(typeof(ArgumentException), "Offset cannot be greater than length of Alphabet.")]
         public void ShouldThrowExceptionIfArgumentIsGreaterThanAlphabetLength()
         {
             _testAlphabet.Transpose(28);

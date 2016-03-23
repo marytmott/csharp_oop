@@ -10,24 +10,14 @@ namespace CaesarCipher
     {
         static void Main(string[] args)
         {
-            //string alphabet = " abcdefghijklmnopqrstuvwxyz";
-            //CaesarCipher testCipher = new CaesarCipher(alphabet);
+            char[] abet = new char[27] { ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
+                'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+                'u', 'v', 'w', 'x', 'y', 'z' };
 
-            //// test offset
-            //string newAbet = testCipher.setOffset(15);
-            //Console.WriteLine(alphabet);
-            //Console.WriteLine(newAbet);
 
-            //// test cipher
-            //string message = "the dove arrives at noon";
-            //string ciphered = testCipher.cipher(message);
-            //Console.WriteLine(ciphered);
+            testAbet.Transpose(5);
 
-            //// test decipher
-            //string deciphered = testCipher.decipher(ciphered);
-            //Console.WriteLine(deciphered);
 
-            //Console.ReadLine();
         }
     }
 
@@ -63,7 +53,7 @@ namespace CaesarCipher
 
             if (offset > abetLength)
             {
-                throw new ArgumentException("Offset cannot be greater than length of Alphabet");
+                throw new ArgumentException("Offset cannot be greater than length of Alphabet.");
             }
 
             // transpose for length of alphabet
@@ -90,26 +80,41 @@ namespace CaesarCipher
     public class ArrayBasedAlphabet : AAlphabet
     {
         private char[] _alphabet;
-        private char[] _charMap = new char[256];   // 256 = number of ascii codes available to encode
+        private char[] _charMap;
         private int _offset;
 
         public ArrayBasedAlphabet(char[] alphabet) : base(alphabet)
         {
-            int charMapLength = alphabet.Length;
+            int abetLength = alphabet.Length;
 
             this._alphabet = alphabet;
-            _charMap = new char[charMapLength];
+            _charMap = new char[abetLength];
         }
 
         public override void Transpose(int offset)
         {
-            
+            int abetLength = this._alphabet.Length;
+
+            // encoding i for the offset ascii value
+
+            if (offset == 0)
+            {
+                throw new ArgumentException("Offset cannot be 0.");
+            }
+
+            if (offset > abetLength)
+            {
+                throw new ArgumentException("Offset cannot be greater than alphabet Length.");
+            }
+
             this._offset = offset;
             
             // TODO - throw error if offset is 0?
             // dry this up, used in dict as well
-            for (int i = 0; i < 256; i++)   // 256 is number of ascii elements
+            // does this need to check for null?
+            for (int i = 0; i < abetLength; i++)   // 256 is number of ascii elements
             {
+                char currentOrig = _alphabet[i];
                 int currOffset = i + offset;
 
                 if (currOffset >= 256)
@@ -123,7 +128,7 @@ namespace CaesarCipher
         public override char GetTransposedChar(char c)
         {
             int baseIdx = Convert.ToByte(c);
-            int transposedIdx = baseIdx + _offset;
+            int transposedIdx = baseIdx + this._offset;
 
             if (transposedIdx >= 256)
             {

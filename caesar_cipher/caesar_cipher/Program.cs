@@ -10,24 +10,24 @@ namespace CaesarCipher
     {
         static void Main(string[] args)
         {
-            string alphabet = " abcdefghijklmnopqrstuvwxyz";
-            CaesarCipher testCipher = new CaesarCipher(alphabet);
+            //string alphabet = " abcdefghijklmnopqrstuvwxyz";
+            //CaesarCipher testCipher = new CaesarCipher(alphabet);
 
-            // test offset
-            string newAbet = testCipher.setOffset(15);
-            Console.WriteLine(alphabet);
-            Console.WriteLine(newAbet);
+            //// test offset
+            //string newAbet = testCipher.setOffset(15);
+            //Console.WriteLine(alphabet);
+            //Console.WriteLine(newAbet);
 
-            // test cipher
-            string message = "the dove arrives at noon";
-            string ciphered = testCipher.cipher(message);
-            Console.WriteLine(ciphered);
+            //// test cipher
+            //string message = "the dove arrives at noon";
+            //string ciphered = testCipher.cipher(message);
+            //Console.WriteLine(ciphered);
 
-            // test decipher
-            string deciphered = testCipher.decipher(ciphered);
-            Console.WriteLine(deciphered);
+            //// test decipher
+            //string deciphered = testCipher.decipher(ciphered);
+            //Console.WriteLine(deciphered);
 
-            Console.ReadLine();
+            //Console.ReadLine();
         }
     }
 
@@ -54,8 +54,18 @@ namespace CaesarCipher
 
         public override void Transpose(int offset)
         {
-            //TODO - check if it is in alphabet! ?! here or cipher part?! 
             int abetLength = _alphabet.Length;
+
+            if (offset == 0)
+            {
+                throw new ArgumentException("Offset cannot be 0.");
+            }
+
+            if (offset > abetLength)
+            {
+                throw new ArgumentException("Offset cannot be greater than length of Alphabet");
+            }
+
             // transpose for length of alphabet
             for (int i = 0; i < abetLength; i++)
             {
@@ -71,9 +81,10 @@ namespace CaesarCipher
 
         public override char GetTransposedChar(char c)
         {
+            // TODO - check if it is in alphabet! ?! here or cipher part?! 
+            // throw error if not found?
             return _charMap[c];
         }
-           
     }
 
     public class ArrayBasedAlphabet : AAlphabet
@@ -92,108 +103,104 @@ namespace CaesarCipher
 
         public override void Transpose(int offset)
         {
-            this._offset = offset;
-            int abetLength = _alphabet.Length;
             
+            this._offset = offset;
+            
+            // TODO - throw error if offset is 0?
             // dry this up, used in dict as well
-            for (int i = 0; i < abetLength; i++)
+            for (int i = 0; i < 256; i++)   // 256 is number of ascii elements
             {
                 int currOffset = i + offset;
 
-                if (currOffset >= abetLength)
+                if (currOffset >= 256)
                 {
-                    currOffset = currOffset - abetLength;
+                    currOffset = currOffset - 256;
                 }
                 _charMap[_alphabet[i]] = _alphabet[currOffset];
             }
-
-
         }
 
         public override char GetTransposedChar(char c)
-        { 
-            // convert to byte
-            // add to offset
+        {
+            int baseIdx = Convert.ToByte(c);
+            int transposedIdx = baseIdx + _offset;
 
-
-
-            // get ascii code (using c# library?)
-            // get the numberic val and transpose it?
-            // store offset and query ascii + offset every time?
-
-            // if greater than length...subtract like in above
-            
+            if (transposedIdx >= 256)
+            {
+                transposedIdx = transposedIdx - 256;
+            }
+            return _charMap[transposedIdx];
         }
 
     }
 
-    public class CaesarCipher
-    {
-        // store in multi array
-        private char[,] _alphabet;
-        private char[,] _offsetAlphabet;
+    //public class CaesarCipher
+    //{
+    //    // store in multi array
+    //    private char[,] _alphabet;
+    //    private char[,] _offsetAlphabet;
 
-        // sets the offset alphabet
-        // edge case for offset of 0?
-        public string setOffset(int offsetAmount)
-        {
-            string newBeginning;
-            string newEnding;
-            int alphabetLength = this._alphabet.Length;
+    //    // sets the offset alphabet
+    //    // edge case for offset of 0?
+    //    public string setOffset(int offsetAmount)
+    //    {
+    //        string newBeginning;
+    //        string newEnding;
+    //        int alphabetLength = this._alphabet.Length;
 
-            if (offsetAmount == 0 || offsetAmount >= alphabetLength)
-            {
-                throw new ArgumentException("Invalid offset amount entered.");
-            }
+    //        if (offsetAmount == 0 || offsetAmount >= alphabetLength)
+    //        {
+    //            throw new ArgumentException("Invalid offset amount entered.");
+    //        }
 
-            newBeginning = _alphabet.Substring(offsetAmount);
-            newEnding = _alphabet.Substring(0, offsetAmount);
-            this._offsetAlphabet = newBeginning + newEnding;
+    //        newBeginning = _alphabet.Substring(offsetAmount);
+    //        newEnding = _alphabet.Substring(0, offsetAmount);
+    //        this._offsetAlphabet = newBeginning + newEnding;
 
-            return this._offsetAlphabet;
-        }
+    //        return this._offsetAlphabet;
+    //    }
 
-        // cypher a message
-        public string cipher(string message)
-        {
-            string ciphered = "";
+    //    // cypher a message
+    //    public string cipher(string message)
+    //    {
+    //        string ciphered = "";
 
-            for (int i = 0; i < message.Length; i++)
-            {
-                char currLetter = message[i];
-                int idx = this._alphabet.IndexOf(currLetter);
-                // dry this up w/ decipher
-                if (idx == -1)
-                {
-                    throw new ArgumentException("Invalid character in message.");
-                }
-                ciphered += this._offsetAlphabet[idx];
-            }
-            return ciphered;
-        }
+    //        for (int i = 0; i < message.Length; i++)
+    //        {
+    //            char currLetter = message[i];
+    //            int idx = this._alphabet.IndexOf(currLetter);
+    //            // dry this up w/ decipher
+    //            if (idx == -1)
+    //            {
+    //                throw new ArgumentException("Invalid character in message.");
+    //            }
+    //            ciphered += this._offsetAlphabet[idx];
+    //        }
+    //        return ciphered;
+    //    }
 
-        // decipher a message
-        public string decipher(string message)
-        {
-            string deciphered = "";
+    //    // decipher a message
+    //    public string decipher(string message)
+    //    {
+    //        string deciphered = "";
 
-            for (int i = 0; i < message.Length; i++)
-            {
-                char currLetter = message[i];
-                int idx = this._offsetAlphabet.IndexOf(currLetter);
-                // dry this up with above
-                if (idx == -1)
-                {
-                    throw new ArgumentException("Invalid character in message.");
-                }
-                deciphered += this._alphabet[idx];
-            }
-            return deciphered;
-        }
+    //        for (int i = 0; i < message.Length; i++)
+    //        {
+    //            char currLetter = message[i];
+    //            int idx = this._offsetAlphabet.IndexOf(currLetter);
+    //            // dry this up with above
+    //            if (idx == -1)
+    //            {
+    //                throw new ArgumentException("Invalid character in message.");
+    //            }
+    //            deciphered += this._alphabet[idx];
+    //        }
+    //        return deciphered;
+    //    }
 
-        public CaesarCipher(string alphabet)
-        {
-            this._alphabet = alphabet;
-        }
-    }
+    //    public CaesarCipher(string alphabet)
+    //    {
+    //        this._alphabet = alphabet;
+    //    }
+    //}
 }

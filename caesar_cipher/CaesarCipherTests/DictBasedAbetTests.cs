@@ -16,7 +16,6 @@ namespace CaesarCipherTests
                 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
                 'u', 'v', 'w', 'x', 'y', 'z' };
             _testAlphabet = new DictionaryBasedAlphabet(abet);
-            // j = 0;
         }
 
         [TestCleanup]
@@ -25,13 +24,11 @@ namespace CaesarCipherTests
             _testAlphabet = null;
         }
 
-
         [TestMethod]
         public void ShouldTransposeCorrectOffsetAmount()
         {
             _testAlphabet.Transpose(10);
 
-            // testing index 0
             char actual1 = _testAlphabet.GetTransposedChar(' ');
             char actual2 = _testAlphabet.GetTransposedChar('d');
             char actual3 = _testAlphabet.GetTransposedChar('z');
@@ -39,11 +36,6 @@ namespace CaesarCipherTests
             Assert.AreEqual('j', actual1);
             Assert.AreEqual('n', actual2);
             Assert.AreEqual('i', actual3);
-
-
-            // edge cases?
-            // 0, length, random middle, set middle or for loop through all
-
         }
 
         [TestMethod]

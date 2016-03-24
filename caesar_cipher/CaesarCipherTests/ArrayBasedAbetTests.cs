@@ -27,10 +27,10 @@ namespace CaesarCipherTests
         [TestMethod]
         public void ShouldTransposeCorrectOffsetAmount()
         {
-            //_testAlphabet.Transpose(5);
-            //char actual1 = _testAlphabet.GetTransposedChar('f');
+            _testAlphabet.Transpose(5);
+            char actual1 = _testAlphabet.GetTransposedChar('f');
 
-            //Assert.AreEqual('a', actual1);
+            Assert.AreEqual('a', actual1);
 
             // test edge case over 255 index
             _testAlphabet.Transpose(240);

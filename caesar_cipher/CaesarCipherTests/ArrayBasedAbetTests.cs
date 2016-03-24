@@ -29,7 +29,7 @@ namespace CaesarCipherTests
         {
             _testAlphabet.Transpose(5);
 
-            char actual1 = _testAlphabet.GetTransposedChar('!');
+            //char actual1 = _testAlphabet.GetTransposedChar('!');
             char actual2 = _testAlphabet.GetTransposedChar('a');
             //char twofiftyfive = Convert.ToChar(255);
             //char actual3 = _testAlphabet.GetTransposedChar(twofiftyfive);
@@ -38,8 +38,8 @@ namespace CaesarCipherTests
             //char expected2 = Convert.ToChar(172);
             //char expected3 = Convert.ToChar(75);
 
-            Assert.AreEqual('&', actual1);
-            //Assert.AreEqual('f', actual2);
+            //Assert.AreEqual('&', actual1);
+            Assert.AreEqual('f', actual2);
             //Assert.AreEqual(expected2, actual2);
             //Assert.AreEqual(expected3, actual3);
         }

@@ -14,9 +14,9 @@ namespace CaesarCipher
                 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
                 'u', 'v', 'w', 'x', 'y', 'z' };
 
-
+            ArrayBasedAlphabet testAbet = new ArrayBasedAlphabet(abet);
             testAbet.Transpose(5);
-
+            Console.ReadLine();
 
         }
     }
@@ -45,6 +45,7 @@ namespace CaesarCipher
         public override void Transpose(int offset)
         {
             int abetLength = _alphabet.Length;
+            int currOffset;
 
             if (offset == 0)
             {
@@ -59,7 +60,7 @@ namespace CaesarCipher
             // transpose for length of alphabet
             for (int i = 0; i < abetLength; i++)
             {
-                int currOffset = i + offset;
+                currOffset = i + offset;
 
                 if (currOffset >= abetLength)
                 {
@@ -73,6 +74,8 @@ namespace CaesarCipher
         {
             // TODO - check if it is in alphabet! ?! here or cipher part?! 
             // throw error if not found?
+            // make sure charmap exists? could not have transposed anything yet?
+
             return _charMap[c];
         }
     }
@@ -82,20 +85,23 @@ namespace CaesarCipher
         private char[] _alphabet;
         private char[] _charMap;
         private int _offset;
+        // just convert to/from offset instead of storing (since you have to convert anyway when searching)
 
         public ArrayBasedAlphabet(char[] alphabet) : base(alphabet)
         {
             int abetLength = alphabet.Length;
 
             this._alphabet = alphabet;
-            _charMap = new char[abetLength];
+            this._charMap = new char[256];
         }
 
         public override void Transpose(int offset)
         {
             int abetLength = this._alphabet.Length;
-
-            // encoding i for the offset ascii value
+            int charMapIdx;
+            int currOffset;
+            char currentChar;
+            char transposed;
 
             if (offset == 0)
             {
@@ -112,31 +118,41 @@ namespace CaesarCipher
             // TODO - throw error if offset is 0?
             // dry this up, used in dict as well
             // does this need to check for null?
-            for (int i = 0; i < abetLength; i++)   // 256 is number of ascii elements
+            for (int i = 0; i < abetLength; i++)
             {
-                char currentOrig = _alphabet[i];
-                int currOffset = i + offset;
+                currentChar = _alphabet[i];
+                charMapIdx = Convert.ToByte(currentChar);
+                currOffset = charMapIdx + offset;
 
                 if (currOffset >= 256)
                 {
                     currOffset = currOffset - 256;
                 }
-                _charMap[_alphabet[i]] = _alphabet[currOffset];
+                transposed = Convert.ToChar(currOffset);
+                // DEBUGGING::
+                //Console.WriteLine(charMapIdx);
+                //Console.WriteLine(currOffset);
+                //Console.WriteLine("--------");
+                //bool isequal = Convert.ToChar(currOffset - this._offset) == currentChar;
+                //Console.WriteLine(isequal);
+                _charMap[charMapIdx] = transposed;
             }
         }
 
         public override char GetTransposedChar(char c)
         {
-            int baseIdx = Convert.ToByte(c);
-            int transposedIdx = baseIdx + this._offset;
+            // make sure charmap exists? could not have transposed anything yet?
+            int charByte = Convert.ToByte(c);
+            int transposedIdx = charByte - this._offset;
+            char origAbetChar;
 
-            if (transposedIdx >= 256)
+            if (transposedIdx <= 0)
             {
-                transposedIdx = transposedIdx - 256;
+                transposedIdx = 256 - (transposedIdx * -1);
             }
-            return _charMap[transposedIdx];
+            origAbetChar = Convert.ToChar(transposedIdx);
+            return origAbetChar;
         }
-
     }
 
     //public class CaesarCipher

@@ -15,7 +15,10 @@ namespace CaesarCipher
                 'u', 'v', 'w', 'x', 'y', 'z' };
 
             ArrayBasedAlphabet testAbet = new ArrayBasedAlphabet(abet);
-            testAbet.Transpose(5);
+            testAbet.Transpose(240);
+            char testGetChar = testAbet.GetTransposedChar('c');
+            Console.WriteLine(testGetChar);
+
             Console.ReadLine();
 
         }
@@ -108,9 +111,9 @@ namespace CaesarCipher
                 throw new ArgumentException("Offset cannot be 0.");
             }
 
-            if (offset > abetLength)
+            if (offset > 256)
             {
-                throw new ArgumentException("Offset cannot be greater than alphabet Length.");
+                throw new ArgumentException("Offset cannot be greater than 256.");
             }
 
             this._offset = offset;
@@ -124,9 +127,9 @@ namespace CaesarCipher
                 charMapIdx = Convert.ToByte(currentChar);
                 currOffset = charMapIdx + offset;
 
-                if (currOffset >= 256)
+                if (currOffset >= 255)
                 {
-                    currOffset = currOffset - 256;
+                    currOffset = currOffset - 255;
                 }
                 transposed = Convert.ToChar(currOffset);
                 // DEBUGGING::
@@ -146,11 +149,12 @@ namespace CaesarCipher
             int transposedIdx = charByte - this._offset;
             char origAbetChar;
 
-            if (transposedIdx <= 0)
+            if (transposedIdx < 0)
             {
-                transposedIdx = 256 - (transposedIdx * -1);
+                transposedIdx += 255;
             }
             origAbetChar = Convert.ToChar(transposedIdx);
+            Console.WriteLine(origAbetChar);
             return origAbetChar;
         }
     }

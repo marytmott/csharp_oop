@@ -27,21 +27,16 @@ namespace CaesarCipherTests
         [TestMethod]
         public void ShouldTransposeCorrectOffsetAmount()
         {
-            _testAlphabet.Transpose(5);
+            //_testAlphabet.Transpose(5);
+            //char actual1 = _testAlphabet.GetTransposedChar('f');
 
-            //char actual1 = _testAlphabet.GetTransposedChar('!');
-            char actual2 = _testAlphabet.GetTransposedChar('a');
-            //char twofiftyfive = Convert.ToChar(255);
-            //char actual3 = _testAlphabet.GetTransposedChar(twofiftyfive);
+            //Assert.AreEqual('a', actual1);
 
-            //char expected1 = Convert.ToChar(140);
-            //char expected2 = Convert.ToChar(172);
-            //char expected3 = Convert.ToChar(75);
+            // test edge case over 255 index
+            _testAlphabet.Transpose(240);
+            char actual2 = _testAlphabet.GetTransposedChar('c');
 
-            //Assert.AreEqual('&', actual1);
-            Assert.AreEqual('f', actual2);
-            //Assert.AreEqual(expected2, actual2);
-            //Assert.AreEqual(expected3, actual3);
+            Assert.AreEqual('r', actual2);
         }
 
         [TestMethod]
@@ -52,10 +47,10 @@ namespace CaesarCipherTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException), "Offset cannot be greater than length of Alphabet")]
+        [ExpectedException(typeof(ArgumentException), "Offset cannot be greater than 256.")]
         public void ShouldThrowExceptionIfArgumentIsGreaterThanAlphabetLength()
         {
-            _testAlphabet.Transpose(300);
+            _testAlphabet.Transpose(257);
         }
     }
 }

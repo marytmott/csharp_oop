@@ -152,9 +152,9 @@ namespace CipherProgram
                 charMapIdx = Convert.ToByte(currentChar);
                 currOffset = charMapIdx + offset;
 
-                if (currOffset >= 256)
+                if (currOffset >= 255)
                 {
-                    currOffset = currOffset - 256;
+                    currOffset = currOffset - 255;
                 }
                 transposed = Convert.ToChar(currOffset);
                 // DEBUGGING::

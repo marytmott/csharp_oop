@@ -38,8 +38,8 @@ namespace CaesarCipherTests
             string ciphered2 = _testCipherArr.Cipher(message2);
 
             byte[] charArr1 = new byte[5] { 129, 126, 133, 133, 136 };
-            byte[] charArr2 = new byte[11] { 129, 136, 144, 24, 122, 139,
-                126, 24, 146, 136, 142 };
+            byte[] charArr2 = new byte[11] { 129, 136, 144, 57, 122, 139,
+                126, 57, 146, 136, 142 };
 
             string expected1 = TestHelperMethods.ConvertToExpected(charArr1);
             string expected2 = TestHelperMethods.ConvertToExpected(charArr2);

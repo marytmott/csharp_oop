@@ -10,26 +10,11 @@ namespace CipherProgram
     {
         static void Main(string[] args)
         {
-            //char[] alphabet = new char[27] { ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
-            //    'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-            //    'u', 'v', 'w', 'x', 'y', 'z' };
-
-            //DictionaryBasedAlphabet abet = new DictionaryBasedAlphabet(alphabet);
-            //abet.Transpose(10);
-
-            //CaesarCipher testCipherDict = new CaesarCipher(abet);
-
-            //string message1 = "hello";
-            //string ciphered1 = testCipherDict.Cipher(message1);
-            //string deciphered1 = testCipherDict.Decipher(ciphered1);
-
-            //Console.ReadLine();
         }
     }
 
     public abstract class AAlphabet
     { 
-
         public AAlphabet(char[] alphabet) { }
 
         // cheater "getter"
@@ -38,7 +23,6 @@ namespace CipherProgram
         public abstract void Transpose(int offset);
 
         public abstract char GetTransposedChar(char c);
-
     }
 
     public class DictionaryBasedAlphabet : AAlphabet
@@ -146,8 +130,6 @@ namespace CipherProgram
             this._charMap = new char[256];
             this._offset = offset;
             
-            // TODO - throw error if offset is 0?
-            // does this need to check for null?
             for (int i = 0; i < abetLength; i++)
             {
                 currentChar = _alphabet[i];
@@ -159,24 +141,16 @@ namespace CipherProgram
                     currOffset = currOffset - 255;
                 }
                 transposed = Convert.ToChar(currOffset);
-                // DEBUGGING::
-                //Console.WriteLine(charMapIdx);
-                //Console.WriteLine(currOffset);
-                //Console.WriteLine("--------");
-                //bool isequal = Convert.ToChar(currOffset - this._offset) == currentChar;
-                //Console.WriteLine(isequal);
                 _charMap[charMapIdx] = transposed;
             }
         }
 
         public override char GetTransposedChar(char c)
         {
-            // make sure charmap exists? could not have transposed anything yet?
             int charByte;
             int transposedIdx;
             char origAbetChar;
 
-            // tODO - test this
             if (this._charMap.Equals(null))
             {
                 throw new NullReferenceException("Alphabet has not been transposed.");
@@ -189,11 +163,16 @@ namespace CipherProgram
             {
                 transposedIdx += 255;
             }
-            // if equals null? --TEST TOO
 
             origAbetChar = Convert.ToChar(transposedIdx);
 
-            //Console.WriteLine(origAbetChar);
+            // because this converts any byte val to ascii, need to check if converted
+            // was in original alphabet:
+            if (Array.IndexOf(this._alphabet, origAbetChar) == -1)
+            {
+                throw new ArgumentException("Char not found in alphabet transpose.");
+            }
+
             return origAbetChar;
         }
     }
@@ -232,12 +211,10 @@ namespace CipherProgram
             string deciphered = "";
             char currLetter;
 
-            // TODO somewhere! --> throw new ArgumentException("Invalid character in message.");
             for (int i = 0; i < message.Length; i++)
             {
                 currLetter = message[i];
                 deciphered += this._alphabet.GetTransposedChar(currLetter);
-                Console.WriteLine(deciphered);
             }
             return deciphered;
         }

@@ -10,22 +10,6 @@ namespace heron_sqrt
     {
         static void Main(string[] args)
         {
-            //int numOfErrs = 0;
-
-            //try
-            //{
-            //    Validate.val();
-            //}
-            //catch(Exception ex)
-            //{
-            //    Console.WriteLine("EXCEPTION: {0}", ex);
-            //    numOfErrs++;
-            //}
-            //finally
-            //{
-            //    Console.WriteLine("Total number of errors: {0}", numOfErrs);
-            //}
-            //Console.ReadLine();
         }
     }
 
@@ -41,7 +25,6 @@ namespace heron_sqrt
         {
             double guess = d / 2;
             double margin = .0001;
-            /// Console.WriteLine("initial guess {0}", guess);
 
             /// check if arg is type int
             if (d.GetType() != typeof(double))
@@ -55,9 +38,7 @@ namespace heron_sqrt
                 throw new ArgumentException("Argument must be a positive value");
             }
 
-
             /// reset guess to try diff number
-
             while(true)
             {
                 /// if guess is between the margins we want

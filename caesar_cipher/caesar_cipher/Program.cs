@@ -145,7 +145,6 @@ namespace CipherProgram
             this._offset = offset;
             
             // TODO - throw error if offset is 0?
-            // dry this up, used in dict as well
             // does this need to check for null?
             for (int i = 0; i < abetLength; i++)
             {
@@ -153,9 +152,9 @@ namespace CipherProgram
                 charMapIdx = Convert.ToByte(currentChar);
                 currOffset = charMapIdx + offset;
 
-                if (currOffset >= 255)
+                if (currOffset >= 256)
                 {
-                    currOffset = currOffset - 255;
+                    currOffset = currOffset - 256;
                 }
                 transposed = Convert.ToChar(currOffset);
                 // DEBUGGING::
@@ -199,7 +198,7 @@ namespace CipherProgram
             _alphabet.Transpose(offsetAmount);
         }
 
-        // cypher a message
+        // cipher a message
         public string Cipher(string message)
         {
             string ciphered = "";

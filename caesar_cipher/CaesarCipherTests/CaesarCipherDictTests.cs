@@ -7,7 +7,7 @@ namespace CaesarCipherTests
     [TestClass]
     public class CaesarCipherDictTests
     {
-        CaesarCipher _testCipherDict;
+        CaesarCipher testCipherDict;
 
         [TestInitialize]
         public void TestInitialize()
@@ -19,13 +19,13 @@ namespace CaesarCipherTests
             DictionaryBasedAlphabet abet = new DictionaryBasedAlphabet(alphabet);
             abet.Transpose(10);
 
-            _testCipherDict = new CaesarCipher(abet);
+            testCipherDict = new CaesarCipher(abet);
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            _testCipherDict = null;
+            testCipherDict = null;
         }
 
         [TestMethod]
@@ -34,8 +34,8 @@ namespace CaesarCipherTests
             string message1 = "hello";
             string message2 = "how are you";
 
-            string ciphered1 = _testCipherDict.Cipher(message1);
-            string ciphered2 = _testCipherDict.Cipher(message2);
+            string ciphered1 = testCipherDict.Cipher(message1);
+            string ciphered2 = testCipherDict.Cipher(message2);
 
             string expected1 = "rovvy";
             string expected2 = "ryfjkaojhyd";
@@ -50,14 +50,25 @@ namespace CaesarCipherTests
             string ciphered1 = "rovvy";
             string ciphered2 = "ryfjkaojhyd";
 
-            string deciphered1 = _testCipherDict.Decipher(ciphered1);
-            string deciphered2 = _testCipherDict.Decipher(ciphered2);
+            string deciphered1 = testCipherDict.Decipher(ciphered1);
+            string deciphered2 = testCipherDict.Decipher(ciphered2);
 
             string expected1 = "hello";
             string expected2 = "how are you";
 
             Assert.AreEqual(expected1, deciphered1);
             Assert.AreEqual(expected2, deciphered2);
+        }
+
+        [TestMethod]
+        public void CipherAndDecipherInOneTestForDictAbet()
+        {
+            string message = "this is a message test";
+
+            string ciphered = testCipherDict.Cipher(message);
+            string deciphered = testCipherDict.Decipher(ciphered);
+
+            Assert.AreEqual(message, deciphered);
         }
     }
 }

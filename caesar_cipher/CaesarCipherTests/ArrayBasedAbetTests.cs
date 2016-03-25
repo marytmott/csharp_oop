@@ -40,14 +40,15 @@ namespace CaesarCipherTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException), "Offset cannot be 0.")]
+        [ExpectedException(typeof(ArgumentOutOfRangeException), "Offset cannot be 0 or less than 0.")]
         public void ShouldThrowExceptionIfArgumentIsZero()
         {
             _testAlphabet.Transpose(0);
+            _testAlphabet.Transpose(-1);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException), "Offset cannot be greater than 256.")]
+        [ExpectedException(typeof(ArgumentOutOfRangeException), "Offset cannot be greater than 256.")]
         public void ShouldThrowExceptionIfArgumentIsGreaterThanAlphabetLength()
         {
             _testAlphabet.Transpose(257);

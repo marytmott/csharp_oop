@@ -8,7 +8,7 @@ namespace CaesarCipherTests
     [TestClass]
     public class DictBasedAbetTests
     {
-        private DictionaryBasedAlphabet _testAlphabet;
+        private DictionaryBasedAlphabet testAlphabet;
 
         [TestInitialize]
         public void TestInit()
@@ -16,23 +16,23 @@ namespace CaesarCipherTests
             char[] abet = new char[27] { ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
                 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
                 'u', 'v', 'w', 'x', 'y', 'z' };
-            _testAlphabet = new DictionaryBasedAlphabet(abet);
+            testAlphabet = new DictionaryBasedAlphabet(abet);
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            _testAlphabet = null;
+            testAlphabet = null;
         }
 
         [TestMethod]
         public void ShouldTransposeCorrectOffsetAmount()
         {
-            _testAlphabet.Transpose(10);
+            testAlphabet.Transpose(10);
 
-            char actual1 = _testAlphabet.GetTransposedChar(' ');
-            char actual2 = _testAlphabet.GetTransposedChar('d');
-            char actual3 = _testAlphabet.GetTransposedChar('z');
+            char actual1 = testAlphabet.GetTransposedChar(' ');
+            char actual2 = testAlphabet.GetTransposedChar('d');
+            char actual3 = testAlphabet.GetTransposedChar('z');
 
             Assert.AreEqual('q', actual1);
             Assert.AreEqual('u', actual2);
@@ -40,24 +40,33 @@ namespace CaesarCipherTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException), "Offset cannot be 0.")]
+        [ExpectedException(typeof(ArgumentOutOfRangeException), "Offset cannot be 0 or less than 0.")]
         public void ShouldThrowExceptionIfArgumentIsZero()
         {
-            _testAlphabet.Transpose(0);
+            testAlphabet.Transpose(0);
+            testAlphabet.Transpose(-1);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException), "Offset cannot be greater than length of Alphabet.")]
+        [ExpectedException(typeof(ArgumentOutOfRangeException), "Offset cannot be greater than length of Alphabet.")]
         public void ShouldThrowExceptionIfArgumentIsGreaterThanAlphabetLength()
         {
-            _testAlphabet.Transpose(28);
+            testAlphabet.Transpose(28);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NullReferenceException), "Alphabet has not been transposed.")]
+        public void ShouldThrowErrorIfAlphabetHasNotBeenTransposed()
+        {
+            testAlphabet.GetTransposedChar('a');
         }
 
         [TestMethod]
         [ExpectedException(typeof(KeyNotFoundException), "Char not found in dictionary.")]
         public void ShouldThrowExceptionIfCharNotFoundInCharMap()
         {
-            _testAlphabet.GetTransposedChar('!');
+            testAlphabet.Transpose(9);
+            testAlphabet.GetTransposedChar('!');
         }
     }
 }

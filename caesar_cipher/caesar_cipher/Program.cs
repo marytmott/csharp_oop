@@ -10,21 +10,20 @@ namespace CipherProgram
     {
         static void Main(string[] args)
         {
-            char[] alphabet = new char[27] { ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
-                'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-                'u', 'v', 'w', 'x', 'y', 'z' };
+            //char[] alphabet = new char[27] { ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
+            //    'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+            //    'u', 'v', 'w', 'x', 'y', 'z' };
 
-            DictionaryBasedAlphabet abet = new DictionaryBasedAlphabet(alphabet);
-            abet.Transpose(10);
+            //DictionaryBasedAlphabet abet = new DictionaryBasedAlphabet(alphabet);
+            //abet.Transpose(10);
 
-            CaesarCipher testCipherDict = new CaesarCipher(abet);
+            //CaesarCipher testCipherDict = new CaesarCipher(abet);
 
-            string message1 = "hello";
-            string ciphered1 = testCipherDict.Cipher(message1);
-            string deciphered1 = testCipherDict.Decipher(ciphered1);
+            //string message1 = "hello";
+            //string ciphered1 = testCipherDict.Cipher(message1);
+            //string deciphered1 = testCipherDict.Decipher(ciphered1);
 
-            Console.ReadLine();
-
+            //Console.ReadLine();
         }
     }
 
@@ -50,7 +49,6 @@ namespace CipherProgram
         public DictionaryBasedAlphabet(char[] alphabet) : base(alphabet)
         {
             this._alphabet = alphabet;
-            _charMap = new Dictionary<char, char>();
         }
 
         public override char CharMap(char c)
@@ -63,15 +61,18 @@ namespace CipherProgram
             int abetLength = _alphabet.Length;
             int currOffset;
 
-            if (offset == 0)
+            if (offset <= 0)
             {
-                throw new ArgumentException("Offset cannot be 0.");
+                throw new ArgumentOutOfRangeException("Offset cannot be 0 or less than 0.");
             }
 
             if (offset > abetLength)
+
             {
-                throw new ArgumentException("Offset cannot be greater than length of Alphabet.");
+                throw new ArgumentOutOfRangeException("Offset cannot be greater than length of Alphabet.");
             }
+
+            _charMap = new Dictionary<char, char>();
 
             // transpose for length of alphabet
             for (int i = 0; i < abetLength; i++)
@@ -88,10 +89,12 @@ namespace CipherProgram
 
         public override char GetTransposedChar(char c)
         {
-            // TODO - check if it is in alphabet! ?! here or cipher part?! 
-            // throw error if not found?
-            // make sure charmap exists? could not have transposed anything yet?
-            //
+
+            if (this._charMap.Equals(null))
+            {
+                throw new NullReferenceException("Alphabet has not been transposed.");
+            }
+   
             foreach (KeyValuePair<char, char> transposed in this._charMap)
             {
                 if (transposed.Value == c)
@@ -99,7 +102,6 @@ namespace CipherProgram
                     return transposed.Key;
                 }
             }
-            // make unit test for this?
             throw new KeyNotFoundException("Char not found in dictionary.");
         }
     }
@@ -109,14 +111,13 @@ namespace CipherProgram
         private char[] _alphabet;
         private char[] _charMap;
         private int _offset;
-        // just convert to/from offset instead of storing (since you have to convert anyway when searching)
+        // just convert to/from offset instead of storing (since you have to convert anyway when searching) ?
 
         public ArrayBasedAlphabet(char[] alphabet) : base(alphabet)
         {
             int abetLength = alphabet.Length;
 
             this._alphabet = alphabet;
-            this._charMap = new char[256];
         }
 
         public override char CharMap(char c)
@@ -132,16 +133,17 @@ namespace CipherProgram
             char currentChar;
             char transposed;
 
-            if (offset == 0)
+            if (offset <= 0)
             {
-                throw new ArgumentException("Offset cannot be 0.");
+                throw new ArgumentOutOfRangeException("Offset cannot be 0 or less than 0.");
             }
 
             if (offset > 256)
             {
-                throw new ArgumentException("Offset cannot be greater than 256.");
+                throw new ArgumentOutOfRangeException("Offset cannot be greater than 256.");
             }
 
+            this._charMap = new char[256];
             this._offset = offset;
             
             // TODO - throw error if offset is 0?
@@ -170,16 +172,28 @@ namespace CipherProgram
         public override char GetTransposedChar(char c)
         {
             // make sure charmap exists? could not have transposed anything yet?
-            int charByte = Convert.ToByte(c);
-            int transposedIdx = charByte - this._offset;
+            int charByte;
+            int transposedIdx;
             char origAbetChar;
+
+            // tODO - test this
+            if (this._charMap.Equals(null))
+            {
+                throw new NullReferenceException("Alphabet has not been transposed.");
+            }
+
+            charByte = Convert.ToByte(c);
+            transposedIdx = charByte - this._offset;
 
             if (transposedIdx < 0)
             {
                 transposedIdx += 255;
             }
+            // if equals null? --TEST TOO
+
             origAbetChar = Convert.ToChar(transposedIdx);
-            Console.WriteLine(origAbetChar);
+
+            //Console.WriteLine(origAbetChar);
             return origAbetChar;
         }
     }

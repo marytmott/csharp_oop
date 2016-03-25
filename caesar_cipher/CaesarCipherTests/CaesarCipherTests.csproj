@@ -56,6 +56,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DictBasedAbetTests.cs" />
     <Compile Include="ArrayBasedAbetTests.cs" />
+    <Compile Include="CaesarCipherDictTests.cs" />
+    <Compile Include="CaesarCipherArrTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\caesar_cipher\caesar_cipher.csproj">

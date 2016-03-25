@@ -4,20 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CaesarCipher
+namespace CipherProgram
 {
     class Program
     {
         static void Main(string[] args)
         {
-            char[] abet = new char[27] { ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
+            char[] alphabet = new char[27] { ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
                 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
                 'u', 'v', 'w', 'x', 'y', 'z' };
 
-            ArrayBasedAlphabet testAbet = new ArrayBasedAlphabet(abet);
-            testAbet.Transpose(240);
-            char testGetChar = testAbet.GetTransposedChar('c');
-            Console.WriteLine(testGetChar);
+            DictionaryBasedAlphabet abet = new DictionaryBasedAlphabet(alphabet);
+            abet.Transpose(10);
+
+            CaesarCipher testCipherDict = new CaesarCipher(abet);
+
+            string message1 = "hello";
+            string ciphered1 = testCipherDict.Cipher(message1);
+            string deciphered1 = testCipherDict.Decipher(ciphered1);
 
             Console.ReadLine();
 
@@ -25,8 +29,12 @@ namespace CaesarCipher
     }
 
     public abstract class AAlphabet
-    {
+    { 
+
         public AAlphabet(char[] alphabet) { }
+
+        // cheater "getter"
+        public abstract char CharMap(char c);
 
         public abstract void Transpose(int offset);
 
@@ -43,6 +51,11 @@ namespace CaesarCipher
         {
             this._alphabet = alphabet;
             _charMap = new Dictionary<char, char>();
+        }
+
+        public override char CharMap(char c)
+        {
+            return _charMap[c];
         }
 
         public override void Transpose(int offset)
@@ -69,7 +82,7 @@ namespace CaesarCipher
                 {
                     currOffset = currOffset - abetLength;
                 }
-                _charMap[_alphabet[i]] = _alphabet[currOffset];
+                _charMap[this._alphabet[i]] = this._alphabet[currOffset];
             }
         }
 
@@ -78,8 +91,16 @@ namespace CaesarCipher
             // TODO - check if it is in alphabet! ?! here or cipher part?! 
             // throw error if not found?
             // make sure charmap exists? could not have transposed anything yet?
-
-            return _charMap[c];
+            //
+            foreach (KeyValuePair<char, char> transposed in this._charMap)
+            {
+                if (transposed.Value == c)
+                {
+                    return transposed.Key;
+                }
+            }
+            // make unit test for this?
+            throw new KeyNotFoundException("Char not found in dictionary.");
         }
     }
 
@@ -96,6 +117,11 @@ namespace CaesarCipher
 
             this._alphabet = alphabet;
             this._charMap = new char[256];
+        }
+
+        public override char CharMap(char c)
+        {
+            return this._charMap[c];
         }
 
         public override void Transpose(int offset)
@@ -163,72 +189,45 @@ namespace CaesarCipher
     {
         private AAlphabet _alphabet;
 
-        /* ================ */
-        // store in multi array
-        private char[,] _alphabet;
-        private char[,] _offsetAlphabet;
-
-        // sets the offset alphabet
-        // edge case for offset of 0?
-        public string setOffset(int offsetAmount)
+        public CaesarCipher(AAlphabet alphabet)
         {
-            string newBeginning;
-            string newEnding;
-            int alphabetLength = this._alphabet.Length;
+            this._alphabet = alphabet;
+        }
 
-            if (offsetAmount == 0 || offsetAmount >= alphabetLength)
-            {
-                throw new ArgumentException("Invalid offset amount entered.");
-            }
-
-            newBeginning = _alphabet.Substring(offsetAmount);
-            newEnding = _alphabet.Substring(0, offsetAmount);
-            this._offsetAlphabet = newBeginning + newEnding;
-
-            return this._offsetAlphabet;
+        public void setOffset(int offsetAmount)
+        {
+            _alphabet.Transpose(offsetAmount);
         }
 
         // cypher a message
-        public string cipher(string message)
+        public string Cipher(string message)
         {
             string ciphered = "";
+            char currLetter;
 
             for (int i = 0; i < message.Length; i++)
             {
-                char currLetter = message[i];
-                int idx = this._alphabet.IndexOf(currLetter);
-                // dry this up w/ decipher
-                if (idx == -1)
-                {
-                    throw new ArgumentException("Invalid character in message.");
-                }
-                ciphered += this._offsetAlphabet[idx];
+                currLetter = message[i];
+                ciphered += this._alphabet.CharMap(currLetter);
             }
             return ciphered;
         }
 
         // decipher a message
-        public string decipher(string message)
+        public string Decipher(string message)
         {
             string deciphered = "";
+            char currLetter;
 
+            // TODO somewhere! --> throw new ArgumentException("Invalid character in message.");
             for (int i = 0; i < message.Length; i++)
             {
-                char currLetter = message[i];
-                int idx = this._offsetAlphabet.IndexOf(currLetter);
-                // dry this up with above
-                if (idx == -1)
-                {
-                    throw new ArgumentException("Invalid character in message.");
-                }
-                deciphered += this._alphabet[idx];
+                currLetter = message[i];
+                deciphered += this._alphabet.GetTransposedChar(currLetter);
+                Console.WriteLine(deciphered);
             }
             return deciphered;
         }
 
-        public CaesarCipher(string alphabet)
-        {
-            this._alphabet = alphabet;
-        }
     }
 }

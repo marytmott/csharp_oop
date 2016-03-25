@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CaesarCipher;
+using CipherProgram;
 
 namespace CaesarCipherTests
 {
@@ -33,9 +34,9 @@ namespace CaesarCipherTests
             char actual2 = _testAlphabet.GetTransposedChar('d');
             char actual3 = _testAlphabet.GetTransposedChar('z');
 
-            Assert.AreEqual('j', actual1);
-            Assert.AreEqual('n', actual2);
-            Assert.AreEqual('i', actual3);
+            Assert.AreEqual('q', actual1);
+            Assert.AreEqual('u', actual2);
+            Assert.AreEqual('p', actual3);
         }
 
         [TestMethod]
@@ -50,6 +51,13 @@ namespace CaesarCipherTests
         public void ShouldThrowExceptionIfArgumentIsGreaterThanAlphabetLength()
         {
             _testAlphabet.Transpose(28);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(KeyNotFoundException), "Char not found in dictionary.")]
+        public void ShouldThrowExceptionIfCharNotFoundInCharMap()
+        {
+            _testAlphabet.GetTransposedChar('!');
         }
     }
 }
